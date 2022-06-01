@@ -1,0 +1,13 @@
+{
+    "Dashboard": true,
+    "User": true,
+    "AppSetting": true,
+    "Menu": true,
+    "AccessLevel": true,
+    "Post": true,
+    "Master": true,
+    "Marketing": true,
+    "Front": true,
+    "Lead": true,
+    "Documentation": true
+}
