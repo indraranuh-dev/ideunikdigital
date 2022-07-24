@@ -35,6 +35,51 @@ class FrontController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+    public function index(Request $request)
+    {
+        return view('front::pages.index');
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
+    public function about(Request $request)
+    {
+        return view('front::pages.about');
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
+    public function service(Request $request)
+    {
+        return view('front::pages.service');
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
+    public function project(Request $request)
+    {
+        return view('front::pages.projects');
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
+    public function contact(Request $request)
+    {
+        return view('front::pages.contact');
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
     public function posts(Request $request)
     {
         return (new PostQuery())->filters((object) [

@@ -42,15 +42,15 @@ class Form extends Component
 
     public function store()
     {
-        $this->validate($this->rules, $this->messages, $this->attributes());
+        // $this->validate($this->rules, $this->messages, $this->attributes());
 
-        Lead::create([
-            'name' => $this->form['nama_lengkap'],
-            'email' => $this->form['email'],
-            'phone' => $this->form['whatsapp'],
-            'question' => $this->form['pertanyaan'],
-            'status' => 'Belum Diproses',
-        ]);
+        // Lead::create([
+        //     'name' => $this->form['nama_lengkap'],
+        //     'email' => $this->form['email'],
+        //     'phone' => $this->form['whatsapp'],
+        //     'question' => $this->form['pertanyaan'],
+        //     'status' => 'Belum Diproses',
+        // ]);
 
         $this->reset('form');
 

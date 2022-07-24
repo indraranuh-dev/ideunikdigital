@@ -1,60 +1,60 @@
 @extends('front::layouts.master')
 
 @section('content')
-<header class="page-header" data-background="{{ asset('images/forklift.png') }}">
-    <div class="container">
-        <h1>Layanan & Produk</h1>
-        <p>Bergabunglah menjadi agen mitra rosalia express dan dapatkan berbagai keuntungannya.</p>
-    </div>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('front.index') }}">Beranda</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Layanan & Produk</li>
-    </ol>
-</header>
-<section class="about-content intro">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="media mb-3">
-                    <img src="{{ $service->thumbnail }}" alt="{{ $service->name }}">
-                    <div class="media-body">
-                        <h4 class="mb-0 font-weight-bold">{{ $service->name }}</h4>
-                        {!! $service->description !!}
+    <x-guest.breadcrumb pageTitle="Layanan">
+        <li><span>Layanan</span></li>
+    </x-guest.breadcrumb>
 
-                        <hr>
+    <section class="flat-row">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="images/about.png" alt="images">
+                </div>
 
-                        <div class="d-flex mb-3">
-                            @if ($service->duration)
-                            <div>
-                                <div class="btn btn-primary d-inline-flex mr-3">
-                                    <i class="bx bxs-time"></i>
-                                </div>
-                            </div>
-                            <div>
-                                {!! $service->duration !!}
-                            </div>
-                            @endif
+                <div class="col-md-6">
+                    <div class="inner-box-about">
 
+                        <div class="title-box">
+                            <div class="title">WELCOME TO <span>ISEO</span></div>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque et nisl massa. Nulla
+                                hendrerit quam sed velit congue.</p>
                         </div>
 
-                        <div class="d-flex">
-                            @if ($service->terms_n_conditions)
-                            <div>
-                                <div class="btn btn-primary d-inline-flex mr-3">
-                                    <i class="bx bxs-notepad"></i>
-                                </div>
-                            </div>
-                            <div>
-                                {!! $service->terms_n_conditions !!}
-                            </div>
-                            @endif
+                        <ul class="flat-list style2">
+                            <li>Integrated Search (SEO & PPC)</li>
+                            <li>Pay Per Click Management</li>
+                            <li>Relevance, Authority & Trust</li>
+                            <li>Search Engine Optimization</li>
+                            <li>Best SEO Companies - September 2017</li>
+                            <li>SEARCH ENGINE OPTIMIZATION COMPANIES</li>
+                        </ul>
+                        <div class="empty-space height30"></div>
+                        <div><a href="#" class="flat-button border-radius-small">View More</a></div>
 
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <section class="flat-row background-theme row-promobox">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="flat-promobox style1 color-white">
+                        <div class="promobox-group-content">
+                            <h3>Try our 1 month days free services</h3>
+                            <p>See how we optimize your site’s performances and grow your business!</p>
+                        </div>
+                        <div class="promobox-group-btn">
+                            <a class="flat-button medium button-color button-radius black" href="{{ route('front.contact') }}">Contact Us</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-</section>
+    </section>
 @endsection

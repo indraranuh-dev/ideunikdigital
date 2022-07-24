@@ -1,89 +1,57 @@
-<div>
-    @if ($isHomePage)
-    <div id="slider-services" class="splide slider-services mt-5">
-        <div class="splide__track">
-            <ul class="splide__list">
-                @forelse ($services as $service)
-                <li class="splide__slide">
-                    <img src="{{ $service->thumbnail }}">
-                    <p>
-                        {{ $service->name }}
-                    </p>
-                </li>
-                @empty
+<section class="flat-row">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="title-section">
 
-                @endforelse
-            </ul>
-        </div>
-    </div>
-    @else
-
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            @forelse ($services as $index => $service)
-            <div class="media service mb-3">
-                <img src="{{ $service->thumbnail }}" alt="{{ $service->name }}">
-                <div class="media-body">
-                    <h4 class="mb-0 font-weight-bold">
-                        <a href="{{ route('front.service.show', $service->slug_name) }}">{{ $service->name }}</a>
-                    </h4>
-                    {!! $service->description !!}
-
-                    <hr>
-
-                    <div class="d-flex">
-
-                        <div class="mr-3">
-                            <ul class="nav flex-column nav-tabs" id="service-{{ $service->slug_name }}" role="tablist">
-                                @if ($service->duration)
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="duration-{{ $index }}-tab" data-toggle="tab"
-                                        href="#duration-{{ $index }}" role="tab" aria-controls="duration-{{ $index }}"
-                                        aria-selected="true">
-                                        <i class="bx bxs-time"></i>
-                                    </a>
-                                </li>
-                                @endif
-
-                                @if ($service->terms_n_conditions)
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ !$service->duration ? 'active' : null }}"
-                                        id="tnc-{{ $index }}-tab" data-toggle="tab" href="#tnc-{{ $index }}" role="tab"
-                                        aria-controls="tnc-{{ $index }}" aria-selected="false">
-                                        <i class="bx bxs-notepad"></i>
-                                    </a>
-                                </li>
-                                @endif
-                            </ul>
-                        </div>
-                        <div class="tab-content" id="service-{{ $service->slug_name }}Content">
-
-                            @if ($service->duration)
-                            <div class="tab-pane fade show active" id="duration-{{ $index }}" role="tabpanel"
-                                aria-labelledby="service-{{ $service->slug_name }}-tab">
-                                {!! $service->duration !!}
-                            </div>
-                            @endif
-
-
-                            @if ($service->terms_n_conditions)
-                            <div class="tab-pane fade {{ !$service->duration ? 'show active' : null }}"
-                                id="tnc-{{ $index }}" role="tabpanel" aria-labelledby="tnc-{{ $index }}-tab">
-                                {!! $service->terms_n_conditions !!}
-                            </div>
-                            @endif
-
-                        </div>
+                    <h1 class="title">Our<span>Services</span></h1>
+                    <div class="sub-title">Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, architecto?
                     </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-4">
+                <div class="iconbox center circle lagre">
+                    <div class="box-header">
+                        <img src="{{ asset('assets/front/images/icon/icon4.svg') }}" alt="icon">
+                        <div class="box-title"><a href="#">Branding</a></div>
+                    </div>
+                    <div class="box-content">
+                        Analyzing negative materials about your brand and addressing them with sentiment
+                        analysis and press release distribution.
+                    </div>
 
                 </div>
             </div>
-            @empty
 
-            @endforelse
+
+            <div class="col-md-4">
+                <div class="iconbox center circle lagre">
+                    <div class="box-header">
+                        <img src="{{ asset('assets/front/images/icon/icon7.svg') }}" alt="icon">
+                        <div class="box-title"><a href="#">Web Development</a></div>
+                    </div>
+                    <div class="box-content">
+                        Turn your visitors into customers with our team of experts. We'll analyze your website
+                        and develop a suitable
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="iconbox center circle lagre">
+                    <div class="box-header">
+                        <img src="{{ asset('assets/front/images/icon/icon8.svg') }}" alt="icon">
+                        <div class="box-title"><a href="#">Social Media</a></div>
+                    </div>
+                    <div class="box-content">
+                        We produce bespoke reports and technical audits that can help your business with
+                        specific areas of digital marketing.
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    @endif
-</div>
+</section>

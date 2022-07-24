@@ -1,39 +1,37 @@
-<header class="slider">
-    <div class="slider-container">
-        <div class="swiper-wrapper">
-
+<div class="tp-banner-container" id="home">
+    <div class="tp-banner">
+        <ul>
             @foreach ($banners as $banner)
-            <div class="swiper-slide {{ $banner->desktop_background_position }}"
-                data-background="{{ $banner->desktop_media_path }}" data-stellar-background-ratio="1.15">
-                <div class="container">
+                <li data-transition="random-static" data-slotamount="7" data-masterspeed="1000" data-saveperformance="on">
+                    <img src="{{ $banner->desktop_media_path }}" alt="slider-image" />
 
                     @if ($banner->with_caption)
+                        @if ($banner->caption_title)
+                            <div class="tp-caption sfl title-slide color-white center" data-x="15" data-y="110"
+                                 data-speed="1000" data-start="1000" data-easing="Power3.easeInOut">
+                                {{ $banner->caption_title }}
+                            </div>
+                        @endif
 
-                    @if ($banner->caption_title)
-                    <h2>{{ $banner->caption_title }}</h2>
-                    @endif
-
-                    @if ($banner->caption_text)
-                    <p>{{ $banner->caption_text }}</p>
-                    @endif
-
+                        @if ($banner->caption_text)
+                            <p></p>
+                            <div class="tp-caption sfr desc-slide color-white center" data-x="15" data-y="250"
+                                 data-speed="1000" data-start="1500" data-easing="Power3.easeInOut">
+                                {{ $banner->caption_text }}
+                            </div>
+                        @endif
                     @endif
 
                     @if ($banner->button_link)
-                    <a class="btn btn-light text-dark" href="{{ $banner->button_link }}">{{ $banner->button_text }}</a>
+                        <div class="tp-caption sfl flat-button-slider bg-button-slider-32bfc0" data-x="15"
+                             data-y="360" data-speed="1000" data-start="2500" data-easing="Power3.easeInOut">
+                            <a href="{{ $banner->button_link }}">{{ $banner->button_text }}</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
+                        </div>
                     @endif
-
-                </div>
-            </div>
+                </li>
             @endforeach
 
-        </div>
-        <div class="inner-elements">
-            <div class="container">
-                <div class="pagination"></div>
-                <div class="button-prev"><i class="bx bx-chevron-left"></i></div>
-                <div class="button-next"><i class="bx bx-chevron-right"></i></div>
-            </div>
-        </div>
+        </ul>
     </div>
-</header>
+</div>
