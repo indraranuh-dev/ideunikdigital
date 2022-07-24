@@ -2,29 +2,33 @@
 
 namespace Modules\Post\Http\Livewire\Post;
 
-use App\Contracts\WithImageUpload;
-use App\Contracts\WithTrix;
-use App\Http\Livewire\ImageUpload;
-use App\Http\Livewire\Trix;
+use App\Contracts\WithEditor;
+use App\Contracts\WithImageFilepond;
+use App\Contracts\WithTagifyList;
+use App\Http\Livewire\Editor;
+use App\Http\Livewire\Filepond\Image;
+use App\Http\Livewire\TagifyList;
 use App\Services\PostService;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Modules\Master\Entities\Category;
+use Modules\Master\Entities\SubCategory;
 use Modules\Post\Entities\Post;
 use Modules\Post\Entities\PostType;
+use Modules\Post\Entities\Tag;
 use Modules\Post\Services\PostType\PostTypeQuery;
 
 class Create extends Component
 {
-    use WithTrix, WithImageUpload;
+    use WithEditor, WithImageFilepond, WithTagifyList;
 
     /**
      * Define form props
      *
      * @var array
      */
-    public $thumbnail, $category, $type, $tags = [], $publish = 1, $allowed_column = [],
-    $tagsInString, $tag, $title, $slug_title, $subject, $description;
+    public $thumbnail, $thumbnail_source, $category, $sub_category, $type, $tags, $status, $allowed_column = [],
+    $title, $slug_title, $subject, $description;
 
     /**
      * Define event listeners
@@ -32,8 +36,9 @@ class Create extends Component
      * @var array
      */
     public $listeners = [
-        Trix::EVENT_VALUE_UPDATED,
-        ImageUpload::EVENT_VALUE_UPDATED,
+        Editor::EVENT_VALUE_UPDATED,
+        Image::EVENT_VALUE_UPDATED,
+        TagifyList::EVENT_VALUE_UPDATED,
     ];
 
     public function mount($slug_type)
@@ -44,6 +49,7 @@ class Create extends Component
             $this->allowed_column = json_decode($type->allow_column);
         }
 
+        $this->getSubCategories();
     }
 
     /**
@@ -55,13 +61,16 @@ class Create extends Component
     {
         return [
             'thumbnail' => 'required',
+            'thumbnail_source' => 'required|max:191',
             'type' => 'required|max:191',
             'category' => 'nullable',
+            'sub_category' => 'nullable',
             'title' => 'required|max:191|unique:posts,title',
             'slug_title' => 'required|max:191|unique:posts,slug_title',
-            'tagsInString' => 'nullable|max:191',
+            'tags' => 'nullable|max:191',
             'subject' => 'nullable|max:191',
             'description' => 'nullable',
+            'status' => 'required',
         ];
     }
 
@@ -73,7 +82,7 @@ class Create extends Component
     protected function messages()
     {
         return [
-            'tagsInString.max' => 'The tags has reached its maximum point.',
+            'tags.max' => 'The tags has reached its maximum point.',
             'description.required' => 'The content field is required.',
         ];
     }
@@ -88,6 +97,9 @@ class Create extends Component
      */
     public function updatedTitle($value)
     {
+
+        $this->resetTagifyList();
+
         $this->slug_title = slug($value);
 
         $this->validate([
@@ -122,7 +134,45 @@ class Create extends Component
     public function updatedType($value)
     {
         $type = PostType::find($value);
-        $this->allowed_column = json_decode($type->allow_column);
+        if ($type) {
+            $this->allowed_column = json_decode($type->allow_column);
+
+            if (in_array('subject', $this->allowed_column)) {
+                $this->validate([
+                    'subject' => 'required',
+                ]);
+            }
+
+            if (in_array('category', $this->allowed_column)) {
+                $this->validate([
+                    'category' => 'required',
+                ]);
+            }
+
+            if (in_array('tags', $this->allowed_column)) {
+                $this->validate([
+                    'tags' => 'required',
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Hooks for type property
+     * Doing type validation after
+     * Type property has been updated
+     *
+     * @param  string $value
+     * @return void
+     */
+    public function updatedCategory($value)
+    {
+        $this->reset('sub_category');
+    }
+
+    public function getSubCategories()
+    {
+        return SubCategory::where('category_id', $this->category)->get();
     }
 
     /**
@@ -136,21 +186,34 @@ class Create extends Component
         $this->validate();
 
         $data = [
-            'id' => Str::random(32),
+            'id' => Str::random(12),
             'title' => $this->title,
             'slug_title' => $this->slug_title,
             'category_id' => $this->category,
+            'sub_category_id' => $this->sub_category ?: null,
             'type_id' => $this->type,
             'subject' => $this->subject,
             'description' => $this->description,
-            'tags' => $this->tagsInString,
+            'tags' => $this->tags,
             'reading_time' => $this->description ? PostService::generateReadingTime($this->description) : '0 Menit',
-            'published_at' => $this->publish ? now()->toDateTimeString() : null,
-            'archived_at' => null,
             'number_of_views' => 0,
             'number_of_shares' => 0,
             'author' => user('id'),
+            'thumbnail_source' => $this->thumbnail_source,
         ];
+
+        // status
+        if ($this->status == 'draft') {
+            $data['published_at'] = null;
+            $data['archived_at'] = null;
+        } else if ($this->status == 'published') {
+            $data['published_by'] = user('id');
+            $data['published_at'] = now()->toDateTimeString();
+            $data['archived_at'] = null;
+        } else if ($this->status == 'archived') {
+            $data['published_at'] = null;
+            $data['archived_at'] = now()->toDateTimeString();
+        }
 
         if ($this->thumbnail) {
             $data['thumbnail'] = $this->thumbnail;
@@ -162,42 +225,22 @@ class Create extends Component
         // Reset props
         $this->reset(
             'thumbnail',
+            'thumbnail_source',
             'title',
             'slug_title',
             'category',
+            'sub_category',
             'subject',
             'description',
             'tags',
-            'tagsInString',
-            'tag'
+            'status'
         );
 
-        // Emit to trix editor, reset text ditor
-        $this->resetTrix();
-        $this->resetImageUpload();
+        // Emit to editor editor, reset text ditor
+        $this->resetEditor();
+        $this->resetImageFilepond();
+        $this->resetTagifyList();
         session()->flash('success', 'Postingan berhasil ditambahkan.');
-    }
-
-    /**
-     * Add tag to tags property
-     *
-     * @return void
-     */
-    public function addTag()
-    {
-        // Check if tag already exist in tags property
-        if (in_array($this->tag, $this->tags)) {
-            return $this->addError('tagsInString', 'Tag has been choosen.');
-        } else {
-            $this->resetErrorBag('tagsInString');
-        }
-
-        // Check if tag is not null
-        if ($this->tag) {
-            array_push($this->tags, $this->tag); // push to tags prop
-            $this->tagsInString = implode(',', $this->tags); // array to string
-            $this->reset('tag');
-        }
     }
 
     /**
@@ -220,13 +263,13 @@ class Create extends Component
 
     /**
      * Hooks for description property
-     * When trix editor has been updated,
+     * When editor editor has been updated,
      * Description property will be update
      *
      * @param  string $value
      * @return void
      */
-    public function trix_value_updated($value)
+    public function editor_value_updated($value)
     {
         $this->description = $value;
     }
@@ -239,25 +282,22 @@ class Create extends Component
      * @param  string $value
      * @return void
      */
-    public function image_uploaded($value)
+    public function images_value_updated($value)
     {
         $this->thumbnail = $value;
     }
 
     /**
-     * Remove tag from tags property
-     * Unset by array index
+     * Hooks for tags property
+     * When tags has been updated,
+     * Tags property will be update
      *
-     * @param  mixed $index
+     * @param  string $value
      * @return void
      */
-    public function removeTag($index)
+    public function tagify_list_value_updated($value, $list = null)
     {
-        // Check if index is exsist in tags prop
-        if (array_key_exists($index, $this->tags)) {
-            unset($this->tags[$index]);
-            $this->tagsInString = implode(',', $this->tags);
-        }
+        $this->tags = $value;
     }
 
     public function render()
@@ -265,6 +305,8 @@ class Create extends Component
         return view('post::livewire.post.create', [
             'types' => PostType::get(['id', 'name']),
             'categories' => $this->getCategories(),
+            'sub_categories' => $this->getSubCategories(),
+            'tagsList' => Tag::orderBy('name')->get()->pluck('name'),
         ]);
     }
 }

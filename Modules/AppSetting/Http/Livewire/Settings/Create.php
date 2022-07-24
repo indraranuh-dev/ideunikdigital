@@ -2,19 +2,19 @@
 
 namespace Modules\AppSetting\Http\Livewire\Settings;
 
-use App\Contracts\WithImageUpload;
-use App\Contracts\WithTrix;
-use App\Http\Livewire\ImageUpload;
-use App\Http\Livewire\Trix;
+use App\Contracts\WithEditor;
+use App\Contracts\WithImageFilepond;
+use App\Http\Livewire\Editor;
+use App\Http\Livewire\Filepond\Image;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Modules\AppSetting\Services\SettingsQuery;
 
 class Create extends Component
 {
-    use WithImageUpload, WithTrix;
+    use WithImageFilepond, WithEditor;
 
-    public $group, $key, $value, $type = 'string', $form_type = 'input';
+    public $group, $key, $alias, $value, $type = 'string', $form_type = 'input';
 
     /**
      * Define event listeners
@@ -22,9 +22,18 @@ class Create extends Component
      * @var array
      */
     public $listeners = [
-        ImageUpload::EVENT_VALUE_UPDATED,
-        Trix::EVENT_VALUE_UPDATED,
+        Image::EVENT_VALUE_UPDATED,
+        Editor::EVENT_VALUE_UPDATED,
     ];
+
+    protected $queryString = [
+        'group',
+    ];
+
+    public function mount()
+    {
+        $this->group = request('group') ?: null;
+    }
 
     /**
      * Validation rules
@@ -66,6 +75,7 @@ class Create extends Component
         $data = [
             'group' => $this->group,
             'key' => $this->key,
+            'alias' => $this->alias,
             'value' => $this->value,
             'type' => $this->type,
             'form_type' => $this->form_type,
@@ -84,13 +94,13 @@ class Create extends Component
 
     /**
      * Hooks for description property
-     * When trix editor has been updated,
+     * When editor editor has been updated,
      * Description property will be update
      *
      * @param  string $value
      * @return void
      */
-    public function trix_value_updated($value)
+    public function editor_value_updated($value)
     {
         $this->value = $value;
     }
@@ -103,7 +113,7 @@ class Create extends Component
      * @param  string $value
      * @return void
      */
-    public function image_uploaded($value)
+    public function images_value_updated($value)
     {
         $this->value = $value;
     }

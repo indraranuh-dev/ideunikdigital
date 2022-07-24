@@ -43,7 +43,8 @@
                                 class="form-select form-select-sm text-capitalize h-100">
                             <option value="">-- Pilih Table Reference --</option>
                             @foreach ($tableReferences as $references)
-                                <option class="text-capitalize" value="{{ strtolower($references->table_reference) }}">
+                                <option class="text-capitalize"
+                                        value="{{ strtolower($references->table_reference) }}">
                                     {{ $references->table_reference }}
                                 </option>
                             @endforeach
@@ -66,48 +67,64 @@
                                              style="width: 100%; max-width: 30px" alt=""></span>
                                 @endif
                                 {{ $category->name }}
+
+                                @if ($category->is_featured == 1)
+                                    <span class="me-1 p-1"><i class='bx bxs-check-circle text-success'></i></span>
+                                @endif
                             </x-table.cell>
                             <x-table.cell wire:sortable.handle title="Tahan untuk memindahkan posisi"
                                           class="cursor-grab" :cell="$category->slug_name" />
                             <x-table.cell :cell="$category->table_reference" />
                             <x-table.cell :cell="$category->position" />
+                            <x-table.cell class="text-center">
+                                <button type="button" wire:click="featured('{{ $category->id }}')"
+                                        class="btn btn-sm text-center {{ $category->is_featured ? 'btn-outline-primary' : 'btn-outline-dark' }}">
+                                    <i
+                                       class="bx {{ $category->is_featured ? 'bxs-check-circle' : 'bxs-x-circle' }}"></i>
+                                    {{ $category->is_featured ? 'Unggulan' : 'Bukan' }}
+                                </button>
+                            </x-table.cell>
                             <x-table.cell>
                                 <div class="btn-group" role="group">
-                                    <x-action-button href="{{ route('adm.master.category.edit', $category->id) }}">
-                                        <i class="bx bx-pencil"></i>
-                                    </x-action-button>
-                                    <div class="btn-group" role="group">
-                                        <button id="dropdown" type="button" class="btn btn-light btn-sm"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bx bx-trash"></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdown">
+                                    @can('category.edit')
+                                        <x-action-button href="{{ route('adm.master.category.edit', $category->id) }}">
+                                            <i class="bx bx-pencil"></i>
+                                        </x-action-button>
+                                    @endcan
+                                    @can('category.delete')
+                                        <div class="btn-group" role="group">
+                                            <button id="dropdown" type="button" class="btn btn-light btn-sm"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdown">
 
-                                            @if ($onlyTrashed)
+                                                @if ($onlyTrashed)
+                                                    <li>
+                                                        <a href="javascript:void(0)" class="dropdown-item"
+                                                           wire:click="restore('{{ $category->id }}')">
+                                                            Pulihkan
+                                                        </a>
+                                                    </li>
+                                                @else
+                                                    <li>
+                                                        <a href="javascript:void(0)" class="dropdown-item"
+                                                           wire:click="trash('{{ $category->id }}')">
+                                                            Sampah
+                                                        </a>
+                                                    </li>
+                                                @endif
+
                                                 <li>
                                                     <a href="javascript:void(0)" class="dropdown-item"
-                                                       wire:click="restore('{{ $category->id }}')">
-                                                        Pulihkan
+                                                       data-bs-toggle="modal" data-bs-target="#remove-modal"
+                                                       wire:click="$set('destroyId','{{ $category->id }}')">
+                                                        Hapus Permanen
                                                     </a>
                                                 </li>
-                                            @else
-                                                <li>
-                                                    <a href="javascript:void(0)" class="dropdown-item"
-                                                       wire:click="trash('{{ $category->id }}')">
-                                                        Sampah
-                                                    </a>
-                                                </li>
-                                            @endif
-
-                                            <li>
-                                                <a href="javascript:void(0)" class="dropdown-item"
-                                                   data-bs-toggle="modal" data-bs-target="#remove-modal"
-                                                   wire:click="$set('destroyId','{{ $category->id }}')">
-                                                    Hapus Permanen
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                            </ul>
+                                        </div>
+                                    @endcan
                                 </div>
                             </x-table.cell>
                         </x-table.row>
