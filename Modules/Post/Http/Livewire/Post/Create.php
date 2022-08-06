@@ -27,7 +27,7 @@ class Create extends Component
      *
      * @var array
      */
-    public $thumbnail, $thumbnail_source, $category, $sub_category, $type, $tags, $status, $allowed_column = [],
+    public $thumbnail, $thumbnail_source, $category, $sub_category, $type, $tags, $status = 'draft', $allowed_column = [],
     $title, $slug_title, $subject, $description;
 
     /**
@@ -70,7 +70,7 @@ class Create extends Component
             'tags' => 'nullable|max:191',
             'subject' => 'nullable|max:191',
             'description' => 'nullable',
-            'status' => 'required',
+            // 'status' => 'required',
         ];
     }
 

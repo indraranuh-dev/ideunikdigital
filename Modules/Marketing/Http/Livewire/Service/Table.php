@@ -2,11 +2,12 @@
 
 namespace Modules\Marketing\Http\Livewire\Service;
 
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Modules\Marketing\Entities\Service;
-use Modules\Marketing\Services\Service\TableConfig;
 use Modules\Marketing\Services\Service\ServiceQuery;
+use Modules\Marketing\Services\Service\TableConfig;
 use Modules\Marketing\Services\Service\TableFilterActions;
 
 class Table extends Component
@@ -77,6 +78,11 @@ class Table extends Component
             $service->update([
                 'is_active' => $service->is_active ? 0 : 1,
             ]);
+
+            $services = (new ServiceQuery())->getPublicServices();
+            Cache::forget('services');
+            Cache::forever('services', $services);
+
             return session()->flash('success', 'Service berhasil ' . $serviceStatus . ' halaman publik.');
 
         }
@@ -95,8 +101,12 @@ class Table extends Component
 
         // Check if service have a thumbnail
         if ($service) {
-
             $service->delete();
+
+            $services = (new ServiceQuery())->getPublicServices();
+            Cache::forget('services');
+            Cache::forever('services', $services);
+
             return session()->flash('success', 'Service berhasil dihapus.');
         }
 
@@ -116,12 +126,17 @@ class Table extends Component
                 'position' => $item['order'],
             ]);
         }
+
+        $services = (new ServiceQuery())->getPublicServices();
+        Cache::forget('services');
+        Cache::forever('services', $services);
+
     }
 
     public function render()
     {
         return view('marketing::livewire.service.table', [
-            'services' => $this->getAllServices()
+            'services' => $this->getAllServices(),
         ]);
     }
 }

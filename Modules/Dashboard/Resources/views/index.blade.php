@@ -28,7 +28,7 @@
                             <div class="d-flex align-items-center">
                                 <h6 class="">Total Visitor</h6>
                             </div>
-                            <livewire:analytics-perform />
+                            {{-- <livewire:analytics-perform /> --}}
                         </div>
                     </div>
 

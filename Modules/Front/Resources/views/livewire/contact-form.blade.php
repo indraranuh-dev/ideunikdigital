@@ -1,8 +1,12 @@
 <section class="flat-row">
     <div class="container">
-        <div class="title-section">
-            <h1 class="title">Contact <span>Us</span></h1>
-            <div class="sub-title">What You Get Using Our SEO Company’s</div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="title-section">
+                    <h1 class="title">{!! cache('front.contact.title') !!}</h1>
+                    <div class="sub-title">{{ cache('front.contact.sub-title') }}</div>
+                </div>
+            </div>
         </div>
 
         <div class="row">
@@ -12,14 +16,14 @@
 
             <div class="col-md-7">
                 @if (session()->has('success'))
-                <div class="rounded-lg alert alert-primary border-0 bg-primary alert-dismissible fade show"
-                     role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h6 class="mb-0 text-white">Selamat!</h6>
-                    <p class="mb-0 text-white"> {{ session('success') }} </p>
-                </div>
+                    <div class="rounded-lg alert alert-primary border-0 bg-primary alert-dismissible fade show"
+                         role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h6 class="mb-0 text-white">Selamat!</h6>
+                        <p class="mb-0 text-white"> {{ session('success') }} </p>
+                    </div>
                 @endif
 
                 <form wire:submit.prevent="store">

@@ -14,12 +14,14 @@ class Image extends Component
     public $uploaded_image;
     public $oldImages;
     public $filename;
+    public $propName;
 
-    public function mount($value = '', $oldImages = null)
+    public function mount($value = '', $oldImages = null, $propName = null)
     {
         $this->component_id = 'images-' . Str::random(5);
         $this->value = $value;
         $this->oldImages = $oldImages;
+        $this->propName = $propName;
 
         if ($oldImages) {
             $this->filename = basename($oldImages);
@@ -38,7 +40,14 @@ class Image extends Component
     public function updated($component, $value)
     {
         if ($component == 'uploaded_image') {
-            $this->emit(self::EVENT_VALUE_UPDATED, $value);
+            if ($this->propName) {
+                return $this->emit(self::EVENT_VALUE_UPDATED, [
+                    'component' => $this->propName,
+                    'value' => $value,
+                ]);
+            }
+
+            return $this->emit(self::EVENT_VALUE_UPDATED, $value);
         }
     }
 

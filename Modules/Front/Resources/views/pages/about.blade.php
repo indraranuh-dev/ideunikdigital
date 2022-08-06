@@ -1,133 +1,61 @@
 @extends('front::layouts.master')
 
-@section('content')
+@section('title', cache('seo.about.title'))
 
-    <div class="page-title parallax parallax1">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="page-title-heading">
-                        <h1 class="title">ABOUT US</h1>
-                    </div>
-                    <div class="breadcrumbs">
-                        <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="blog.html">About Us</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+@push('meta')
+    <meta name="author" content="{{ cache('app_name') }}" />
+    <meta name="description" content="{{ cache('seo.about.description') }}" />
+    <meta name="keywords" content="{{ cache('seo.keywords') }}" />
+
+    <!-- SOCIAL MEDIA META -->
+    <meta property="og:description" content="{{ cache('seo.about.description') }}" />
+    <meta property="og:image"
+          content="{{ cache('default_logo_square') ? url(cache('default_logo_square')) : 'https://via.placeholder.com/600x400/181818/ddd?text=' . cache('app_name') . '.com' }}" />
+    <meta property="og:site_name" content="{{ cache('app_name') }}" />
+    <meta property="og:title" content="{{ cache('app_name') }} | {{ cache('seo.about.title') }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ route('front.about') }}" />
+
+    <!-- TWITTER META -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="{{ route('front.about') }}" />
+    <meta name="twitter:creator" content="{{ cache('app_name') }}" />
+    <meta name="twitter:title" content="{{ cache('app_name') }} | {{ cache('seo.about.title') }}" />
+    <meta name="twitter:description" content="{{ cache('seo.about.description') }}" />
+    <meta name="twitter:image"
+          content="{{ cache('default_logo_square') ? url(cache('default_logo_square')) : 'https://via.placeholder.com/600x400/181818/ddd?text=' . cache('app_name') . '.com' }}" />
+@endpush
+
+@section('content')
+    <x-guest.breadcrumb pageTitle="Tentang Kami">
+        <li><span>Tentang Kami</span></li>
+    </x-guest.breadcrumb>
 
     <section class="flat-row">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
-                    <img src="images/about.png" alt="images">
-                </div>
-
-                <div class="col-md-6">
-                    <div class="inner-box-about">
-
-                        <div class="title-box">
-                            <div class="title">WELCOME TO <span>ISEO</span></div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque et nisl massa. Nulla
-                                hendrerit quam sed velit congue.</p>
-                        </div>
-
-                        <ul class="flat-list style2">
-                            <li>Integrated Search (SEO & PPC)</li>
-                            <li>Pay Per Click Management</li>
-                            <li>Relevance, Authority & Trust</li>
-                            <li>Search Engine Optimization</li>
-                            <li>Best SEO Companies - September 2017</li>
-                            <li>SEARCH ENGINE OPTIMIZATION COMPANIES</li>
-                        </ul>
-                        <div class="empty-space height30"></div>
-                        <div><a href="#" class="flat-button border-radius-small">View More</a></div>
-
+                <div class="col-md-12">
+                    <div class="title-section">
+                        <h1 class="title">Tentang Kami</h1>
                     </div>
                 </div>
-
-
             </div>
+            {!! cache('front.about.description') !!}
         </div>
     </section>
 
-    <section class="flat-row parallax parallax2">
-        <div class="overlay"></div>
+    <section class="flat-row">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="title-section color-white">
-                        <i class="fa fa-line-chart" aria-hidden="true"></i>
-                        <h1 class="title">Our Customers About i<span>SEO</span></h1>
-                        <div class="sub-title">What You Get Using Our SEO Company’s</div>
+                    <div class="title-section">
+                        <h2 class="title">Visi Misi</h2>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="flat-testimonials" data-item="2" data-nav="false" data-dots="true" data-auto="false">
-                        <div class="testimonials style5">
-                            <div class="message">
-                                <blockquote class="whisper">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci
-                                    done idunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitoa tion ullamco laboris nisi ut aliquip commodo.
-                                </blockquote>
-                            </div>
-
-                            <div class="avatar">
-                                <div class="testimonial-author-thumbnail">
-                                    <img src="images/testimonial/1.jpg" alt="images">
-                                </div>
-                                <div class="name"><span>John Smith</span></div>
-                                <div class="position">CEO &amp; Founder - Okler</div>
-                            </div>
-                        </div>
-
-                        <div class="testimonials style5">
-                            <div class="message">
-                                <blockquote class="whisper">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci
-                                    done idunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitoa tion ullamco laboris nisi ut aliquip commodo.
-                                </blockquote>
-                            </div>
-
-                            <div class="avatar">
-                                <div class="testimonial-author-thumbnail">
-                                    <img src="images/testimonial/2.jpg" alt="images">
-                                </div>
-                                <div class="name"><span>John Smith</span></div>
-                                <div class="position">CEO &amp; Founder - Okler</div>
-                            </div>
-                        </div>
-
-                        <div class="testimonials style5">
-                            <div class="message">
-                                <blockquote class="whisper">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci
-                                    done idunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitoa tion ullamco laboris nisi ut aliquip commodo.
-                                </blockquote>
-                            </div>
-
-                            <div class="avatar">
-                                <div class="testimonial-author-thumbnail">
-                                    <img src="images/testimonial/1.jpg" alt="images">
-                                </div>
-                                <div class="name"><span>John Smith</span></div>
-                                <div class="position">CEO &amp; Founder - Okler</div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+            {!! cache('front.about.visimisi') !!}
         </div>
     </section>
+
+    <livewire:front::teams />
 @endsection

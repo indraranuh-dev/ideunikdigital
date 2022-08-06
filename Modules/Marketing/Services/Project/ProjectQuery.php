@@ -11,12 +11,11 @@ class ProjectQuery extends Project
      *
      * @return void
      */
-    public function getPublicProjects()
+    public function getPublicProjects($paginate = 4)
     {
         return Project::query()
             ->where('is_active', 1)
-            ->orderBy('position')
-            ->get();
+            ->paginate($paginate);
     }
 
     /**
@@ -42,16 +41,33 @@ class ProjectQuery extends Project
     {
         $projects = Project::query();
 
-        // Check if props below is true/not empty
-        if ($request->is_active) {
-            // Search query
-            $projects->isActive($request);
+        if (property_exists($request, 'category')) {
+            if ($request->category) {
+                // Search query
+                $projects->category($request);
+            }
         }
 
-        // Check if props below is true/not empty
-        if ($request->search) {
-            // Search query
-            $projects->search($request);
+        if (property_exists($request, 'service')) {
+            if ($request->service) {
+                // Search query
+                $projects->service($request);
+            }
+        }
+
+        if (property_exists($request, 'is_active')) {
+            if ($request->is_active) {
+                // Search query
+                $projects->isActive($request);
+            }
+        }
+
+        if (property_exists($request, 'search')) {
+            // Check if props below is true/not empty
+            if ($request->search) {
+                // Search query
+                $projects->search($request);
+            }
         }
 
         return $projects->sort($request)->paginate($total);

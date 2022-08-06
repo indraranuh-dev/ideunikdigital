@@ -5,6 +5,7 @@ namespace Modules\Marketing\Entities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Marketing\Traits\Project\Filterable;
+use Modules\Master\Entities\Category;
 
 class Project extends Model
 {
@@ -28,5 +29,15 @@ class Project extends Model
     protected static function newFactory()
     {
         return \Modules\Marketing\Database\factories\ProjectFactory::new ();
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 }

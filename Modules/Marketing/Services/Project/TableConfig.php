@@ -26,8 +26,15 @@ trait TableConfig
             'additional_class' => null,
         ],
         [
-            'cell_name' => 'Posisi',
-            'column_name' => 'position',
+            'cell_name' => 'Layanan',
+            'column_name' => 'service_id',
+            'sortable' => false,
+            'order' => null,
+            'additional_class' => null,
+        ],
+        [
+            'cell_name' => 'Kategori',
+            'column_name' => 'category_id',
             'sortable' => false,
             'order' => null,
             'additional_class' => null,

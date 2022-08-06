@@ -34,7 +34,8 @@
             @forelse ($services as $service)
                 <x-table.row wire:sortable.item="{{ $service->id }}" wire:key="service-{{ $service->id }}">
                     <x-table.cell wire:sortable.handle title="Tahan untuk memindahkan posisi" class="cursor-grab">
-                        <img height="70" src="{{ $service->media_path ?: cache('default_thumbnail_square') }}"
+                        <img height="70"
+                             src="{{ $service->logo ? url($service->logo) : cache('default_thumbnail_square') }}"
                              alt="">
                     </x-table.cell>
                     <x-table.cell wire:sortable.handle title="Tahan untuk memindahkan posisi" class="cursor-grab"
@@ -49,7 +50,7 @@
                     </x-table.cell>
                     <x-table.cell>
                         <div class="btn-group" role="group">
-                            <x-action-button href="{{ route('adm.marketing.layanan.edit', $service->id) }}">
+                            <x-action-button href="{{ route('adm.marketing.service.edit', $service->id) }}">
                                 <i class="bx bx-pencil"></i>
                             </x-action-button>
                             <x-action-button data-bs-toggle="modal" data-bs-target="#remove-modal"

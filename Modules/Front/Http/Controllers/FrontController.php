@@ -5,6 +5,8 @@ namespace Modules\Front\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Marketing\Entities\Service;
+use Modules\Master\Services\Category\CategoryQuery;
 use Modules\Post\Entities\Post;
 use Modules\Post\Entities\PostType;
 use Modules\Post\Services\Post\PostQuery;
@@ -62,6 +64,18 @@ class FrontController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+    public function showService(Request $request)
+    {
+        $service = Service::where('slug_name', $request->slug)->firstOrFail();
+        return view('front::pages.show-service', [
+            'service' => $service,
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
     public function project(Request $request)
     {
         return view('front::pages.projects');
@@ -82,7 +96,7 @@ class FrontController extends Controller
      */
     public function posts(Request $request)
     {
-        return (new PostQuery())->filters((object) [
+        $posts = (new PostQuery())->publicPosts((object) [
             'category' => $request->category,
             'type' => $request->type,
             'status' => $request->status,
@@ -90,6 +104,10 @@ class FrontController extends Controller
             'order' => $request->order,
             'search' => $request->search,
         ], 10);
+
+        return view('front::pages.post', [
+            'posts' => $posts,
+        ]);
     }
 
     /**
@@ -98,7 +116,12 @@ class FrontController extends Controller
      */
     public function showPost($slug_title)
     {
-        return (new PostQuery())->showPost($slug_title);
-    }
+        $post = (new PostQuery())->showPublicPost($slug_title);
+        $categories = (new CategoryQuery())->getByTableReference('posts.berita');
 
+        return view('front::pages.post-show', [
+            'post' => $post,
+            'categories' => $categories,
+        ]);
+    }
 }

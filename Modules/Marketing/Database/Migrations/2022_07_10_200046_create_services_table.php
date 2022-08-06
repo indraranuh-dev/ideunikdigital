@@ -18,7 +18,7 @@ class CreateServicesTable extends Migration
             $table->string('name');
             $table->string('slug_name');
             $table->string('logo');
-            $table->string('header_image');
+            $table->string('header_image')->nullable();
             $table->text('short_description')->nullable();
             $table->text('description')->nullable();
             $table->integer('position')->default(1);

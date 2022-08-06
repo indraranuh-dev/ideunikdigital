@@ -18,11 +18,18 @@
                 <li class="nav-item dropdown {{ activeRouteIs('front.service.*', 'active') }}">
                     <a class="nav-link dropdown-toggle" href="{{ route('front.service.index') }}" role="button"
                        data-toggle="dropdown" aria-expanded="false">Layanan</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
+                    @php
+                        $servicesData = cache('services') ?: collect([]);
+                    @endphp
+
+                    @if (!$servicesData->isEmpty())
+                        <div class="dropdown-menu">
+                            @foreach ($servicesData as $service)
+                                <a class="dropdown-item"
+                                   href="{{ route('front.service.show', $service->slug_name) }}">{{ $service->name }}</a>
+                            @endforeach
+                        </div>
+                    @endif
                 </li>
                 <li class="nav-item {{ activeRouteIs('front.project.*', 'active') }}">
                     <a class="nav-link" href="{{ route('front.project') }}">Proyek</a>

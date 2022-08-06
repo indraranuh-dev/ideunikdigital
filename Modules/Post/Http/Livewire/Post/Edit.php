@@ -26,7 +26,7 @@ class Edit extends Component
      *
      * @var array
      */
-    public $thumbnail, $thumbnail_source, $category, $sub_category, $type, $tags, $status, $published_at, $published_by, $allowed_column = [],
+    public $thumbnail, $thumbnail_source, $category, $sub_category, $type, $tags, $status = 'draft', $published_at, $published_by, $allowed_column = [],
     $title, $slug_title, $subject, $description;
 
     public $post, $oldThumbnail;

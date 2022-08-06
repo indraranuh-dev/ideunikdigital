@@ -45,6 +45,15 @@ Route::group([
     });
 
     Route::group([
+        'as' => 'team.',
+        'prefix' => 'team',
+    ], function () {
+        Route::get('/', 'TeamController@index')->name('index');
+        Route::get('/tambah', 'TeamController@create')->name('create');
+        Route::get('/edit/{id}', 'TeamController@edit')->name('edit');
+    });
+
+    Route::group([
         'as' => 'partner.',
         'prefix' => 'partner',
     ], function () {

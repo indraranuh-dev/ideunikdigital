@@ -40,6 +40,6 @@ Route::group([
         'prefix' => '/',
     ], function () {
         Route::get('/blog', [FrontController::class, 'posts'])->name('index');
-        Route::get('/blog/{slug_title}', [FrontController::class, 'showPost'])->name('show');
+        Route::get('/blog/{slug_title}', [FrontController::class, 'showPost'])->middleware('post_views')->name('show');
     });
 });

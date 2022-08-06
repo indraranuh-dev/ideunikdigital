@@ -19,11 +19,23 @@ class AppSettingTableSeeder extends Seeder
     {
         Model::unguard();
         $settings = DefaultAppSettings::allSettings();
+        $cms = DefaultAppSettings::allCms();
+        $seo = DefaultAppSettings::allSeo();
 
         foreach ($settings as $setting) {
             Cache::forever($setting['key'], $setting['value']);
         }
 
+        foreach ($cms as $item) {
+            Cache::forever($item['key'], $item['value']);
+        }
+
+        foreach ($seo as $item) {
+            Cache::forever($item['key'], $item['value']);
+        }
+
         AppSetting::insert($settings);
+        AppSetting::insert($cms);
+        AppSetting::insert($seo);
     }
 }

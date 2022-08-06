@@ -243,13 +243,16 @@ class PostQuery
      * @param  string $slug_title
      * @return void
      */
-    public function showPublicPost(string $slug_title, $category)
+    public function showPublicPost(string $slug_title, $category = null)
     {
-        return Post::whereHas('type', function ($query) use ($category) {
-            $query->where('slug_name', $category);
-        })
-            ->where('slug_title', $slug_title)
-            ->published()
+        $post = Post::where('slug_title', $slug_title);
+
+        if ($category) {
+            $post->whereHas('type', function ($query) use ($category) {
+                $query->where('slug_name', $category);
+            });
+        }
+        return $post->published()
             ->firstOrFail();
     }
 

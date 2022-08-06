@@ -25,6 +25,40 @@ trait Filterable
     }
 
     /**
+     * Handle query to find post service
+     *
+     * @param  Illuminate\Database\Eloquent\Builder $query
+     * @param  object $request
+     * @return void
+     */
+
+    public function scopeService($query, $request)
+    {
+        $request = (object) $request;
+        return $query->whereHas('service', function ($query) use ($request) {
+            $query->where('id', $request->service)
+                ->orWhere('slug_name', $request->service);
+        });
+    }
+
+    /**
+     * Handle query to find post category
+     *
+     * @param  Illuminate\Database\Eloquent\Builder $query
+     * @param  object $request
+     * @return void
+     */
+
+    public function scopeCategory($query, $request)
+    {
+        $request = (object) $request;
+        return $query->whereHas('category', function ($query) use ($request) {
+            $query->where('id', $request->category)
+                ->orWhere('slug_name', $request->category);
+        });
+    }
+
+    /**
      * Handle query to get last position
      *
      * @param  Illuminate\Database\Eloquent\Builder $query

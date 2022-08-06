@@ -7,7 +7,7 @@
         <x-alert state="warning" color="white" title="Upsss..." :message="session('failed')" />
     @endif
 
-    <h6 class="text-uppercase text-secondary">Daftar Proyek</h6>
+    <h6 class="text-uppercase text-secondary">Daftar Layanan</h6>
     <hr>
 
     <x-table.with-filter :pagination="true" sortable="updateOrder">
@@ -22,6 +22,18 @@
 
         <x-slot name="filters">
             <div class="list-group-item border-0">
+                <select wire:model.defer="service" class="form-select h-100 mb-3">
+                    <option value="">-- Semua Layanan --</option>
+                    @foreach ($services as $service)
+                        <option value="{{ $service->slug_name }}">{{ $service->name }}</option>
+                    @endforeach
+                </select>
+                <select wire:model.defer="category" class="form-select h-100 mb-3">
+                    <option value="">-- Semua Kategori --</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->slug_name }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
                 <select wire:model.defer="is_active" class="form-select h-100">
                     <option value="">-- Ditampilkan --</option>
                     <option value="true">Ya</option>
@@ -32,14 +44,23 @@
 
         <x-slot name="table_body">
             @forelse ($projects as $project)
-                <x-table.row wire:sortable.item="{{ $project->id }}" wire:key="project-{{ $project->id }}">
-                    <x-table.cell wire:sortable.handle title="Tahan untuk memindahkan posisi" class="cursor-grab">
-                        <img height="70" src="{{ $project->media_path ?: cache('default_thumbnail_square') }}"
+                <x-table.row w>
+                    <x-table.cell>
+                        <img height="70"
+                             src="{{ $project->thumbnail ? url($project->thumbnail) : cache('default_thumbnail_square') }}"
                              alt="">
                     </x-table.cell>
-                    <x-table.cell wire:sortable.handle title="Tahan untuk memindahkan posisi" class="cursor-grab"
-                                  :cell="$project->name" />
-                    <x-table.cell :cell="$project->position" />
+                    <x-table.cell :cell="$project->name" />
+                    <x-table.cell>
+                        <x-badge icon="" state="{{ $project->is_active ? 'primary' : 'default' }}">
+                            {{ $project->service ? $project->service->name : 'Belum diatur' }}
+                        </x-badge>
+                    </x-table.cell>
+                    <x-table.cell>
+                        <x-badge icon="" state="{{ $project->is_active ? 'primary' : 'default' }}">
+                            {{ $project->category ? $project->category->name : 'Belum diatur' }}
+                        </x-badge>
+                    </x-table.cell>
                     <x-table.cell>
                         <div class="cursor-pointer" wire:click="showOrHide('{{ $project->id }}')">
                             <x-badge icon="" state="{{ $project->is_active ? 'success' : 'warning' }}">
@@ -49,7 +70,7 @@
                     </x-table.cell>
                     <x-table.cell>
                         <div class="btn-group" role="group">
-                            <x-action-button href="{{ route('adm.marketing.proyek.edit', $project->id) }}">
+                            <x-action-button href="{{ route('adm.marketing.project.edit', $project->id) }}">
                                 <i class="bx bx-pencil"></i>
                             </x-action-button>
                             <x-action-button data-bs-toggle="modal" data-bs-target="#remove-modal"

@@ -5,9 +5,11 @@ namespace Modules\Marketing\Http\Livewire\Project;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Modules\Marketing\Entities\Project;
+use Modules\Marketing\Entities\Service;
 use Modules\Marketing\Services\Project\ProjectQuery;
 use Modules\Marketing\Services\Project\TableConfig;
 use Modules\Marketing\Services\Project\TableFilterActions;
+use Modules\Master\Services\Category\CategoryQuery;
 
 class Table extends Component
 {
@@ -18,7 +20,7 @@ class Table extends Component
      *
      * @var string
      */
-    public $sort = 'position', $order = 'asc', $category, $is_active, $search, $destroyId, $perPage = 10;
+    public $sort = 'position', $order = 'asc', $service, $category, $is_active, $search, $destroyId, $perPage = 10;
 
     /**
      * Define props value before component rendered
@@ -37,6 +39,7 @@ class Table extends Component
      */
     protected $queryString = [
         'category',
+        'service',
         'is_active',
         'sort',
         'order',
@@ -51,6 +54,7 @@ class Table extends Component
     public function getAllProjects()
     {
         return (new ProjectQuery())->filters((object) [
+            'service' => $this->service,
             'category' => $this->category,
             'is_active' => $this->is_active,
             'search' => $this->search,
@@ -103,25 +107,12 @@ class Table extends Component
         return session()->flash('failed', 'Project tidak ditemukan.');
     }
 
-    /**
-     * Update banner position while drag n drop
-     *
-     * @param  mixed $list
-     * @return void
-     */
-    public function updateOrder($list)
-    {
-        foreach ($list as $item) {
-            Project::find($item['value'])->update([
-                'position' => $item['order'],
-            ]);
-        }
-    }
-
     public function render()
     {
         return view('marketing::livewire.project.table', [
-            'projects' => $this->getAllProjects()
+            'projects' => $this->getAllProjects(),
+            'services' => Service::get(['id', 'name']),
+            'categories' => (new CategoryQuery())->getByTableReference('projects'),
         ]);
     }
 }

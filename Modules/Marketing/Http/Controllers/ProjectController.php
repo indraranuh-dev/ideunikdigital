@@ -4,6 +4,7 @@ namespace Modules\Marketing\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Routing\Controller;
+use Modules\Marketing\Entities\Project;
 
 class ProjectController extends Controller
 {
